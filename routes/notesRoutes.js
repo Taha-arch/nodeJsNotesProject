@@ -78,7 +78,22 @@ router.put('/:id', (req, res) =>{
 });
 
 //it should delete an existing note (update the notes.json file)
-router.delete('/:id', );
+router.delete('/:id', (req, res)=>{
+    const id= parseInt(req.params.id);
+    const index = notes.notes.findIndex((element)=> element.id === id);
+    if (!index){
+        res.status(404).json({Message: "Id not found!!"});
+    }
+    notes.notes.splice(index,1);
+    res.status(200).json({Message: "Note deleted successfully"})
+    fs.writeFileSync(path.join(__dirname,"../data/notes.json"),
+    JSON.stringify(notes,null,2),err=>{
+        if (err){
+            throw err
+        }
+        res.json(notes);
+    })
+   });
 
 
 
